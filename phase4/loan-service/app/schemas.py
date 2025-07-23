@@ -31,7 +31,7 @@ class Loan(BaseModel):
     extensions_count: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserLoanRecord(BaseModel):
     id: int
@@ -42,7 +42,7 @@ class UserLoanRecord(BaseModel):
     status: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserLoanHistory(BaseModel):
@@ -50,7 +50,7 @@ class UserLoanHistory(BaseModel):
     total: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class LoanDetails(BaseModel):
@@ -63,7 +63,7 @@ class LoanDetails(BaseModel):
     status: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class LoanExtensionRequest(BaseModel):
     extension_days: int
