@@ -3,10 +3,11 @@ from datetime import datetime, timedelta, timezone
 from app import models, schemas
 from fastapi import HTTPException
 import httpx
+import os
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type
 
-USER_SERVICE_URL = "http://127.0.0.1:8080"
-BOOK_SERVICE_URL = "http://127.0.0.1:8082"
+USER_SERVICE_URL = os.getenv("USER_SERVICE_URL", "http://127.0.0.1:8080")
+BOOK_SERVICE_URL = os.getenv("BOOK_SERVICE_URL", "http://127.0.0.1:8082")
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(1), retry=retry_if_exception_type(httpx.RequestError))
 async def get_user(client: httpx.AsyncClient, user_id: int):

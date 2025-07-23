@@ -5,6 +5,11 @@ from app.database import get_db
 
 router = APIRouter(prefix="/api/users", tags=["Users"])
 
+@router.get("/health")
+def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "user-service"}
+
 @router.post("/", response_model=schemas.UserRead, status_code=201)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     try:

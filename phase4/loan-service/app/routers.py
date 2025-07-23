@@ -6,6 +6,11 @@ import httpx
 
 router = APIRouter(prefix="/api/loans", tags=["Loans"])
 
+@router.get("/health")
+def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "loan-service"}
+
 @router.post("/", response_model=schemas.Loan, status_code=201)
 async def issue_loan(loan: schemas.LoanCreate, db: Session = Depends(get_db)):
     try:

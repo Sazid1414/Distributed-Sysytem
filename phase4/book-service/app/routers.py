@@ -6,6 +6,11 @@ from app.database import get_db
 
 router = APIRouter(prefix="/api/books", tags=["Books"], include_in_schema=True)
 
+@router.get("/health")
+def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "book-service"}
+
 @router.post("/", response_model=schemas.BookRead, status_code=201)
 def create_book(book: schemas.BookCreate, db: Session = Depends(get_db)):
     try:
