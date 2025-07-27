@@ -10,11 +10,6 @@ class LoanCreate(BaseModel):
 class LoanReturn(BaseModel):
     loan_id: int
 
-class LoanUpdate(BaseModel):
-    due_date: Optional[datetime] = None
-    status: Optional[str] = None
-    return_date: Optional[datetime] = None
-
 class BookInfo(BaseModel):
     id: int
     title: str
@@ -36,7 +31,7 @@ class Loan(BaseModel):
     extensions_count: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class UserLoanRecord(BaseModel):
     id: int
@@ -47,7 +42,7 @@ class UserLoanRecord(BaseModel):
     status: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class UserLoanHistory(BaseModel):
@@ -55,7 +50,7 @@ class UserLoanHistory(BaseModel):
     total: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class LoanDetails(BaseModel):
@@ -68,7 +63,7 @@ class LoanDetails(BaseModel):
     status: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class LoanExtensionRequest(BaseModel):
     extension_days: int

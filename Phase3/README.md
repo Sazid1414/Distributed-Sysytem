@@ -1,44 +1,82 @@
-# Distributed System - Phase 3
+# 🐳 Distributed System with Nginx Reverse Proxy
 
-A microservices-based library management system with Python reverse proxy instead of Nginx.
+A microservices-based distributed system using Docker containers with Nginx as a reverse proxy.
 
-## Architecture
+## 🏗️ Architecture
 
-- **API Gateway**: Python reverse proxy (port 8000)
-- **User Service**: User management (port 8080)
-- **Book Service**: Book catalog (port 8082)
-- **Loan Service**: Book lending (port 8081)
+```
+Client → Nginx Reverse Proxy (Port 80) → Docker Containers
+                                          ├── User Service (Port 8080)
+                                          ├── Book Service (Port 8082)
+                                          └── Loan Service (Port 8081)
+```
 
-## Quick Start
+## 🚀 Quick Start
 
-1. **Run the system**:
-   ```bash
-   start.bat
-   ```
+### Start the entire system:
+```cmd
+docker-compose up --build
+```
 
-2. **Access the system**:
-   - API Gateway: http://localhost:8000/docs
-   - User Service: http://localhost:8080/docs
-   - Book Service: http://localhost:8082/docs
-   - Loan Service: http://localhost:8081/docs
+### Access the system:
+- **Main Gateway**: http://localhost
+- **Health Check**: http://localhost/health
 
-## Features
+### API Endpoints:
+- **Users**: http://localhost/api/users
+- **Books**: http://localhost/api/books
+- **Loans**: http://localhost/api/loans
 
-✅ **True Reverse Proxy**: Pattern-based routing like Nginx  
-✅ **Microservices**: Independent services with their own models  
-✅ **No Code Duplication**: Each service maintains its own logic  
-✅ **Clean Architecture**: Gateway only does routing  
+### Service Documentation:
+- **Users**: http://localhost/docs/users
+- **Books**: http://localhost/docs/books
+- **Loans**: http://localhost/docs/loans
 
-## API Endpoints
+## 🛑 Stop the system:
+```cmd
+docker-compose down
+```
 
-- `GET/POST/PUT/DELETE /api/users/*` → User Service
-- `GET/POST/PUT/DELETE /api/books/*` → Book Service
-- `GET/POST/PUT/DELETE /api/loans/*` → Loan Service
+## 🔧 Useful Commands
 
-## Technology Stack
+```cmd
+# View logs
+docker-compose logs -f
 
-- **FastAPI** - Web framework
-- **SQLite** - Database (per service)
-- **Uvicorn** - ASGI server
-- **httpx** - HTTP client for proxy
-- **Pydantic** - Data validation
+# View specific service logs
+docker-compose logs nginx
+docker-compose logs user-service
+
+# Check container status
+docker-compose ps
+
+# Restart services
+docker-compose restart
+```
+
+## 📁 Project Structure
+```
+Phase3/
+├── docker-compose.yml      # Container orchestration
+├── nginx.conf             # Nginx reverse proxy config
+├── user-service/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── app/
+├── book-service/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── app/
+└── loan-service/
+    ├── Dockerfile
+    ├── requirements.txt
+    └── app/
+```
+
+## 🔄 Technology Stack
+
+- **Reverse Proxy**: Nginx (in Docker container)
+- **Framework**: FastAPI
+- **Database**: SQLite
+- **Containerization**: Docker & Docker Compose
+- **Architecture**: Microservices

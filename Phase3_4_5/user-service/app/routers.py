@@ -14,17 +14,16 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
-@router.get("/user/{user_id}", response_model=schemas.UserRead)
+@router.get("/{user_id}", response_model=schemas.UserRead)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-# FIXED: Changed from /{user_id} to /user/{user_id} to match the GET route pattern
-@router.put("/user/{user_id}", response_model=schemas.UserRead)
-def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_id(db, user_id=user_id)
-    if db_user is None:
+@router.put("/{user_id}", response_model=schemas.UserRead)
+def update_user(user_id: int, user_data: schemas.UserUpdate, db: Session = Depends(get_db)):
+    updated_user = crud.update_user(db, user_id, user_data)
+    if not updated_user:
         raise HTTPException(status_code=404, detail="User not found")
-    return crud.update_user(db=db, user_id=user_id, user=user)
+    return updated_user

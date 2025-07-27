@@ -7,4 +7,9 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="User Service")
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Docker and monitoring"""
+    return {"status": "healthy", "service": "user-service"}
+
 app.include_router(router)

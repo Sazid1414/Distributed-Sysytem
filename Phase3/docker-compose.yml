@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  # Nginx Reverse Proxy
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx-gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - user-service
+      - book-service
+      - loan-service
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "8080:8080"  # Exposed for direct access if needed
+    environment:
+      - DATABASE_URL=sqlite:///./users.db
+      - HOST=0.0.0.0
+      - PORT=8080
+    volumes:
+      - user-data:/app/data
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Book Service
+  book-service:
+    build:
+      context: ./book-service
+      dockerfile: Dockerfile
+    container_name: book-service
+    ports:
+      - "8082:8082"  # Exposed for direct access if needed
+    environment:
+      - DATABASE_URL=sqlite:///./books.db
+      - HOST=0.0.0.0
+      - PORT=8082
+    volumes:
+      - book-data:/app/data
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Loan Service
+  loan-service:
+    build:
+      context: ./loan-service
+      dockerfile: Dockerfile
+    container_name: loan-service
+    ports:
+      - "8081:8081"  # Exposed for direct access if needed
+    environment:
+      - DATABASE_URL=sqlite:///./loans.db
+      - HOST=0.0.0.0
+      - PORT=8081
+    volumes:
+      - loan-data:/app/data
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Named volumes for persistent data
+volumes:
+  user-data:
+    driver: local
+  book-data:
+    driver: local
+  loan-data:
+    driver: local
+
+# Custom network for service communication
+networks:
+  microservices-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

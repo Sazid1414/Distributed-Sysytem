@@ -13,6 +13,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Docker and monitoring"""
+    return {"status": "healthy", "service": "book-service"}
+
 # Include router
 app.include_router(router)
 
